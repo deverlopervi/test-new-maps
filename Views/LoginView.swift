@@ -137,7 +137,7 @@ struct LoginView: View {
 
             Button {
                 focusedField = nil
-                Task { await authStore.login(username: username, password: password) }
+                Task { await authStore.saveSession(nonce: response.nonce, displayName: response.displayName) }
             } label: {
                 HStack(spacing: 10) {
                     if authStore.isBusy {
