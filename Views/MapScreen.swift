@@ -44,17 +44,17 @@ private struct HazardCategory: Identifiable, Hashable {
 }
 
 private let hazardCategories: [HazardCategory] = [
-    .init(title: "Tất cả", icon: "square.grid.2x2.fill", color: Color(hex: 0xF5A524)),
-    .init(title: "Tai nạn giao thông", icon: "car.side.fill", color: Color(hex: 0xFF4D4D)),
-    .init(title: "Tắc đường", icon: "road.lanes", color: Color(hex: 0xF97316)),
-    .init(title: "Ngập lụt / Mưa lớn", icon: "cloud.heavyrain.fill", color: Color(hex: 0x2F80ED)),
-    .init(title: "Sạt lở đất", icon: "mountain.2.fill", color: Color(hex: 0xA16207)),
-    .init(title: "Bão / Gió lớn", icon: "wind", color: Color(hex: 0x64748B)),
-    .init(title: "Cần cấp cứu / Cứu thương", icon: "cross.case.fill", color: Color(hex: 0xE11D48)),
-    .init(title: "Hỏa hoạn", icon: "flame.fill", color: Color(hex: 0xEF4444)),
-    .init(title: "SOS khẩn cấp", icon: "sos", color: Color(hex: 0xDC2626)),
-    .init(title: "Cứu hộ xe", icon: "wrench.and.screwdriver.fill", color: Color(hex: 0xF59E0B)),
-    .init(title: "Khác", icon: "mappin.and.ellipse", color: Color(hex: 0x8B5CF6))
+    .init(title: "Tất cả", icon: "square.grid.2x2.fill", color: Color(mapHex: 0xF5A524)),
+    .init(title: "Tai nạn giao thông", icon: "car.side.fill", color: Color(mapHex: 0xFF4D4D)),
+    .init(title: "Tắc đường", icon: "road.lanes", color: Color(mapHex: 0xF97316)),
+    .init(title: "Ngập lụt / Mưa lớn", icon: "cloud.heavyrain.fill", color: Color(mapHex: 0x2F80ED)),
+    .init(title: "Sạt lở đất", icon: "mountain.2.fill", color: Color(mapHex: 0xA16207)),
+    .init(title: "Bão / Gió lớn", icon: "wind", color: Color(mapHex: 0x64748B)),
+    .init(title: "Cần cấp cứu / Cứu thương", icon: "cross.case.fill", color: Color(mapHex: 0xE11D48)),
+    .init(title: "Hỏa hoạn", icon: "flame.fill", color: Color(mapHex: 0xEF4444)),
+    .init(title: "SOS khẩn cấp", icon: "sos", color: Color(mapHex: 0xDC2626)),
+    .init(title: "Cứu hộ xe", icon: "wrench.and.screwdriver.fill", color: Color(mapHex: 0xF59E0B)),
+    .init(title: "Khác", icon: "mappin.and.ellipse", color: Color(mapHex: 0x8B5CF6))
 ]
 
 struct MapScreen: View {
@@ -119,7 +119,7 @@ struct MapScreen: View {
                 locationManager.request()
                 await syncEngine.sync()
             }
-            .onChange(of: locationManager.coordinate?.latitude) { oldValue, newValue in
+            .onChange(of: locationManager.coordinate?.latitude) { _ in
                 if let coordinate = locationManager.coordinate {
                     centerCoordinate = coordinate
                 }
@@ -173,7 +173,7 @@ struct MapScreen: View {
             )
 
             RadialGradient(
-                colors: [Color(hex: 0xBFE7F3).opacity(0.18), Color.clear],
+                colors: [Color(mapHex: 0xBFE7F3).opacity(0.18), Color.clear],
                 center: .topLeading,
                 startRadius: 40,
                 endRadius: 260
@@ -187,7 +187,7 @@ struct MapScreen: View {
         HStack(spacing: 10) {
             ZStack {
                 Circle()
-                    .fill(Color(hex: 0xFF5A1F))
+                    .fill(Color(mapHex: 0xFF5A1F))
                 Image(systemName: "mappin.circle.fill")
                     .font(.system(size: 20, weight: .black))
                     .foregroundStyle(.white)
@@ -197,7 +197,7 @@ struct MapScreen: View {
             Text("MAPS.TOCTRUONGBIKER.COM")
                 .font(.system(size: 13, weight: .heavy, design: .rounded))
                 .tracking(0.35)
-                .foregroundStyle(Color(hex: 0x1F2937))
+                .foregroundStyle(Color(mapHex: 0x1F2937))
                 .lineLimit(1)
                 .minimumScaleFactor(0.75)
 
@@ -208,9 +208,9 @@ struct MapScreen: View {
             } label: {
                 Image(systemName: "line.3.horizontal")
                     .font(.system(size: 18, weight: .black))
-                    .foregroundStyle(Color(hex: 0x111827))
+                    .foregroundStyle(Color(mapHex: 0x111827))
                     .frame(width: 38, height: 38)
-                    .background(Color(hex: 0xF8FAFC), in: Circle())
+                    .background(Color(mapHex: 0xF8FAFC), in: Circle())
             }
             .accessibilityLabel("Mở menu")
         }
@@ -226,17 +226,17 @@ struct MapScreen: View {
         HStack(spacing: 12) {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 20, weight: .bold))
-                .foregroundStyle(Color(hex: 0x64748B))
+                .foregroundStyle(Color(mapHex: 0x64748B))
 
             Text("Tìm địa điểm, đường, quận...")
                 .font(.system(size: 16, weight: .heavy, design: .rounded))
-                .foregroundStyle(Color(hex: 0x6B7280))
+                .foregroundStyle(Color(mapHex: 0x6B7280))
                 .lineLimit(1)
 
             Spacer(minLength: 8)
 
             Rectangle()
-                .fill(Color(hex: 0xE5E7EB))
+                .fill(Color(mapHex: 0xE5E7EB))
                 .frame(width: 1, height: 30)
 
             Button {
@@ -248,7 +248,7 @@ struct MapScreen: View {
             } label: {
                 Image(systemName: "location.north.line.fill")
                     .font(.system(size: 18, weight: .black))
-                    .foregroundStyle(Color(hex: 0x2F80ED))
+                    .foregroundStyle(Color(mapHex: 0x2F80ED))
                     .frame(width: 34, height: 38)
             }
             .accessibilityLabel("Tìm đường hoặc định vị")
@@ -272,7 +272,7 @@ struct MapScreen: View {
             } label: {
                 Image(systemName: "scope")
                     .font(.system(size: 24, weight: .black))
-                    .foregroundStyle(Color(hex: 0x2F80ED))
+                    .foregroundStyle(Color(mapHex: 0x2F80ED))
                     .frame(width: 54, height: 54)
                     .background(Color.white.opacity(0.96), in: Circle())
                     .overlay(Circle().stroke(Color.white.opacity(0.85), lineWidth: 1))
@@ -289,10 +289,10 @@ struct MapScreen: View {
                     Text("Ghim")
                         .font(.system(size: 11, weight: .heavy, design: .rounded))
                 }
-                .foregroundStyle(Color(hex: 0xD97706))
+                .foregroundStyle(Color(mapHex: 0xD97706))
                 .frame(width: 54, height: 54)
                 .background(Color.white.opacity(0.97), in: Circle())
-                .overlay(Circle().stroke(Color(hex: 0xFDE8C7), lineWidth: 1))
+                .overlay(Circle().stroke(Color(mapHex: 0xFDE8C7), lineWidth: 1))
                 .shadow(color: Color.black.opacity(0.16), radius: 12, x: 0, y: 6)
             }
             .accessibilityLabel("Ghim cảnh báo")
@@ -309,11 +309,11 @@ struct MapScreen: View {
                 .foregroundStyle(.white)
                 .frame(width: 58, height: 58)
                 .background(
-                    LinearGradient(colors: [Color(hex: 0xFF3347), Color(hex: 0xD60000)], startPoint: .top, endPoint: .bottom),
+                    LinearGradient(colors: [Color(mapHex: 0xFF3347), Color(mapHex: 0xD60000)], startPoint: .top, endPoint: .bottom),
                     in: Circle()
                 )
                 .overlay(Circle().stroke(Color.white.opacity(0.72), lineWidth: 1.5))
-                .shadow(color: Color(hex: 0xD60000).opacity(0.38), radius: 18, x: 0, y: 8)
+                .shadow(color: Color(mapHex: 0xD60000).opacity(0.38), radius: 18, x: 0, y: 8)
             }
             .accessibilityLabel("SOS khẩn cấp")
         }
@@ -323,19 +323,19 @@ struct MapScreen: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 7) {
                 Circle()
-                    .fill(Color(hex: 0x10B981))
+                    .fill(Color(mapHex: 0x10B981))
                     .frame(width: 10, height: 10)
                 Text("0")
                     .font(.system(size: 15, weight: .heavy, design: .rounded))
-                    .foregroundStyle(Color(hex: 0x00A980))
+                    .foregroundStyle(Color(mapHex: 0x00A980))
                 Text("người đang ping")
                     .font(.system(size: 14, weight: .medium, design: .rounded))
-                    .foregroundStyle(Color(hex: 0x374151))
+                    .foregroundStyle(Color(mapHex: 0x374151))
             }
 
             Text(authStore.isLoggedIn ? "Vị trí đang sẵn sàng để chia sẻ với cộng đồng." : "Bạn cần đăng nhập để chia sẻ vị trí trực tiếp.")
                 .font(.system(size: 13, weight: .medium, design: .rounded))
-                .foregroundStyle(Color(hex: 0x8A94A3))
+                .foregroundStyle(Color(mapHex: 0x8A94A3))
                 .lineLimit(2)
         }
         .padding(.horizontal, 14)
@@ -347,203 +347,10 @@ struct MapScreen: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    private var topCommandCenter: some View {
-        GlassCard(cornerRadius: 28) {
-            VStack(spacing: 14) {
-                HStack(spacing: 12) {
-                    ZStack {
-                        Circle()
-                            .fill(LinearGradient(
-                                colors: [Color(hex: 0xFFB703), Color(hex: 0xFB5607)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ))
-                        Image(systemName: "motorcycle.fill")
-                            .font(.system(size: 18, weight: .black))
-                            .foregroundStyle(.white)
-                    }
-                    .frame(width: 46, height: 46)
-                    .shadow(color: Color(hex: 0xFB5607).opacity(0.45), radius: 18, y: 8)
-
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Maps Biker")
-                            .font(.system(.title3, design: .rounded, weight: .black))
-                            .foregroundStyle(.white)
-                        Text("Cộng đồng cảnh báo & cứu hộ")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(.white.opacity(0.68))
-                    }
-
-                    Spacer()
-
-                    liveBadge
-
-                    Button {
-                        activeSheet = .menu
-                    } label: {
-                        Image(systemName: "line.3.horizontal")
-                            .font(.headline.weight(.heavy))
-                            .foregroundStyle(.white)
-                            .frame(width: 42, height: 42)
-                            .background(Color.white.opacity(0.13), in: Circle())
-                    }
-                    .accessibilityLabel("Mở menu")
-                }
-
-                Button {
-                    locationManager.request()
-                } label: {
-                    HStack(spacing: 10) {
-                        Image(systemName: "magnifyingglass")
-                            .font(.headline.weight(.bold))
-                            .foregroundStyle(Color(hex: 0xFBBF24))
-                        Text("Tìm địa điểm, cung đường, quận...")
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(.white.opacity(0.74))
-                        Spacer()
-                        Image(systemName: "scope")
-                            .foregroundStyle(.white.opacity(0.45))
-                    }
-                    .padding(.horizontal, 14)
-                    .frame(height: 48)
-                    .background(Color(hex: 0x0F172A).opacity(0.62), in: Capsule())
-                    .overlay(
-                        Capsule()
-                            .stroke(Color.white.opacity(0.10), lineWidth: 1)
-                    )
-                }
-            }
-        }
-    }
-
-    private var liveBadge: some View {
-        HStack(spacing: 6) {
-            Circle()
-                .fill(syncEngine.isSyncing ? Color(hex: 0xFBBF24) : Color(hex: 0x22C55E))
-                .frame(width: 8, height: 8)
-            Text(syncEngine.isSyncing ? "SYNC" : "LIVE")
-                .font(.caption2.monospaced().weight(.black))
-                .foregroundStyle(.white)
-        }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 8)
-        .background(Color.white.opacity(0.12), in: Capsule())
-    }
-
-    private var categoryRail: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 9) {
-                ForEach(hazardCategories) { category in
-                    CategoryChip(
-                        category: category,
-                        isSelected: category.title == selectedCategory
-                    ) {
-                        selectedCategory = category.title
-                    }
-                }
-            }
-            .padding(.horizontal, 2)
-        }
-    }
-
-    private var centerReticle: some View {
-        VStack(spacing: 0) {
-            Image(systemName: "plus")
-                .font(.system(size: 18, weight: .black))
-                .foregroundStyle(.white)
-                .frame(width: 38, height: 38)
-                .background(Color(hex: 0x0F172A).opacity(0.82), in: Circle())
-                .overlay(Circle().stroke(Color(hex: 0xF59E0B), lineWidth: 2))
-            Rectangle()
-                .fill(Color(hex: 0xF59E0B))
-                .frame(width: 2, height: 18)
-                .offset(y: -1)
-        }
-        .shadow(color: .black.opacity(0.28), radius: 16, y: 8)
-        .allowsHitTesting(false)
-    }
-
-    private var floatingControls: some View {
-        VStack(spacing: 10) {
-            RoundIconButton(systemName: syncEngine.isSyncing ? "arrow.triangle.2.circlepath" : "arrow.clockwise") {
-                Task { await syncEngine.sync() }
-            }
-            RoundIconButton(systemName: "location.fill") {
-                if let coordinate = locationManager.coordinate {
-                    centerCoordinate = coordinate
-                } else {
-                    locationManager.request()
-                }
-            }
-            RoundIconButton(systemName: "map.fill") {}
-        }
-    }
-
-    private var bottomDock: some View {
-        GlassCard(cornerRadius: 30) {
-            VStack(spacing: 14) {
-                HStack(spacing: 10) {
-                    StatPill(
-                        value: "\(filteredHazards.count)",
-                        title: "cảnh báo",
-                        icon: "exclamationmark.triangle.fill",
-                        color: Color(hex: 0xEF4444)
-                    )
-                    StatPill(
-                        value: "\(syncEngine.checkins.count)",
-                        title: "checkin",
-                        icon: "mappin.circle.fill",
-                        color: Color(hex: 0xF97316)
-                    )
-                    StatPill(
-                        value: "\(syncEngine.journey.count)",
-                        title: "hành trình",
-                        icon: "point.topleft.down.curvedto.point.bottomright.up",
-                        color: Color(hex: 0x38BDF8)
-                    )
-                }
-
-                HStack(spacing: 10) {
-                    Button {
-                        activeSheet = .sos
-                    } label: {
-                        HStack(spacing: 8) {
-                            Image(systemName: "sos")
-                                .font(.title3.weight(.black))
-                            Text("SOS")
-                                .font(.headline.weight(.black))
-                        }
-                        .foregroundStyle(.white)
-                        .frame(width: 106, height: 56)
-                        .background(
-                            LinearGradient(
-                                colors: [Color(hex: 0xFF2D55), Color(hex: 0xB91C1C)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
-                            in: RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        )
-                        .shadow(color: Color(hex: 0xFF2D55).opacity(0.4), radius: 18, y: 8)
-                    }
-
-                    ActionPill(title: "Ghim", icon: "pin.fill", tint: Color(hex: 0xF59E0B)) {
-                        activeSheet = .hazardPin
-                    }
-                    ActionPill(title: "Checkin", icon: "camera.fill", tint: Color(hex: 0xFB923C)) {
-                        activeSheet = .checkin
-                    }
-                    ActionPill(title: "Menu", icon: "person.crop.circle.fill", tint: Color(hex: 0x38BDF8)) {
-                        activeSheet = .menu
-                    }
-                }
-            }
-        }
-    }
-
     private func errorBanner(_ message: String) -> some View {
         HStack(spacing: 10) {
             Image(systemName: "exclamationmark.triangle.fill")
-                .foregroundStyle(Color(hex: 0xFBBF24))
+                .foregroundStyle(Color(mapHex: 0xFBBF24))
             Text(message)
                 .font(.footnote.weight(.semibold))
                 .foregroundStyle(.white)
@@ -551,7 +358,7 @@ struct MapScreen: View {
             Spacer()
         }
         .padding(12)
-        .background(Color(hex: 0x7F1D1D).opacity(0.88), in: RoundedRectangle(cornerRadius: 16))
+        .background(Color(mapHex: 0x7F1D1D).opacity(0.88), in: RoundedRectangle(cornerRadius: 16))
         .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.white.opacity(0.12)))
     }
 }
@@ -569,10 +376,10 @@ private struct CategoryChip: View {
                 Text(category.title)
                     .font(.caption.weight(.bold))
             }
-            .foregroundStyle(isSelected ? Color(hex: 0x07111F) : .white)
+            .foregroundStyle(isSelected ? Color(mapHex: 0x07111F) : .white)
             .padding(.horizontal, 12)
             .padding(.vertical, 10)
-            .background(isSelected ? category.color : Color(hex: 0x0F172A).opacity(0.70), in: Capsule())
+            .background(isSelected ? category.color : Color(mapHex: 0x0F172A).opacity(0.70), in: Capsule())
             .overlay(Capsule().stroke(isSelected ? Color.white.opacity(0.0) : Color.white.opacity(0.12)))
             .shadow(color: isSelected ? category.color.opacity(0.35) : .clear, radius: 14, y: 7)
         }
@@ -689,7 +496,7 @@ struct HazardPinSheet: View {
                         icon: "pin.fill",
                         title: "Ghim cảnh báo",
                         subtitle: "Đặt ghim tại tâm bản đồ để cộng đồng biker né rủi ro.",
-                        color: Color(hex: 0xF59E0B)
+                        color: Color(mapHex: 0xF59E0B)
                     )
 
                     VStack(alignment: .leading, spacing: 10) {
@@ -772,12 +579,12 @@ struct SOSSheet: View {
                     icon: "sos",
                     title: "SOS khẩn cấp",
                     subtitle: "Gửi vị trí hiện tại cho nhóm cứu hộ và chuẩn bị gọi khẩn cấp.",
-                    color: Color(hex: 0xEF4444)
+                    color: Color(mapHex: 0xEF4444)
                 )
 
                 HStack(spacing: 12) {
-                    SOSQuickAction(title: "Gọi 115", icon: "phone.fill", color: Color(hex: 0xEF4444), url: URL(string: "tel:115"))
-                    SOSQuickAction(title: "Cứu hộ xe", icon: "wrench.and.screwdriver.fill", color: Color(hex: 0xF59E0B), url: nil)
+                    SOSQuickAction(title: "Gọi 115", icon: "phone.fill", color: Color(mapHex: 0xEF4444), url: URL(string: "tel:115"))
+                    SOSQuickAction(title: "Cứu hộ xe", icon: "wrench.and.screwdriver.fill", color: Color(mapHex: 0xF59E0B), url: nil)
                 }
 
                 TextField("Bạn cần hỗ trợ gì?", text: $note, axis: .vertical)
@@ -795,7 +602,7 @@ struct SOSSheet: View {
                         .frame(maxWidth: .infinity)
                         .padding(16)
                         .background(
-                            LinearGradient(colors: [Color(hex: 0xFF2D55), Color(hex: 0x991B1B)], startPoint: .topLeading, endPoint: .bottomTrailing),
+                            LinearGradient(colors: [Color(mapHex: 0xFF2D55), Color(mapHex: 0x991B1B)], startPoint: .topLeading, endPoint: .bottomTrailing),
                             in: RoundedRectangle(cornerRadius: 18)
                         )
                 }
@@ -829,7 +636,7 @@ struct MainMenuSheet: View {
                 VStack(spacing: 16) {
                     HStack(spacing: 14) {
                         Circle()
-                            .fill(Color(hex: 0xFF5A1F))
+                            .fill(Color(mapHex: 0xFF5A1F))
                             .frame(width: 54, height: 54)
                             .overlay(
                                 Image(systemName: "mappin.circle.fill")
@@ -840,21 +647,21 @@ struct MainMenuSheet: View {
                         VStack(alignment: .leading, spacing: 3) {
                             Text(authStore.user?.displayName ?? "Bạn chưa đăng nhập.")
                                 .font(.headline.weight(.black))
-                                .foregroundStyle(Color(hex: 0x111827))
+                                .foregroundStyle(Color(mapHex: 0x111827))
                             Text(authStore.user?.email ?? "Đăng nhập để checkin, chia sẻ vị trí và đồng bộ hành trình.")
                                 .font(.subheadline)
-                                .foregroundStyle(Color(hex: 0x6B7280))
+                                .foregroundStyle(Color(mapHex: 0x6B7280))
                                 .fixedSize(horizontal: false, vertical: true)
                         }
                         Spacer()
                     }
                     .padding(14)
-                    .background(Color(hex: 0xF8FAFC), in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+                    .background(Color(mapHex: 0xF8FAFC), in: RoundedRectangle(cornerRadius: 24, style: .continuous))
 
                     VStack(spacing: 10) {
-                        MenuActionRow(title: "Tài khoản", subtitle: authStore.isLoggedIn ? "Xem profile và đăng xuất" : "Đăng nhập / đăng ký nhanh", icon: "person.crop.circle.fill", color: Color(hex: 0x2F80ED), action: openAccount)
-                        MenuActionRow(title: "Checkin", subtitle: "Lưu điểm đã ghé và ghi chú cung đường", icon: "camera.fill", color: Color(hex: 0xF97316), action: openCheckin)
-                        MenuActionRow(title: "Hành trình", subtitle: "Các cung đường bạn đã đi & khoảnh khắc", icon: "point.topleft.down.curvedto.point.bottomright.up", color: Color(hex: 0x10B981), action: openJourney)
+                        MenuActionRow(title: "Tài khoản", subtitle: authStore.isLoggedIn ? "Xem profile và đăng xuất" : "Đăng nhập / đăng ký nhanh", icon: "person.crop.circle.fill", color: Color(mapHex: 0x2F80ED), action: openAccount)
+                        MenuActionRow(title: "Checkin", subtitle: "Lưu điểm đã ghé và ghi chú cung đường", icon: "camera.fill", color: Color(mapHex: 0xF97316), action: openCheckin)
+                        MenuActionRow(title: "Hành trình", subtitle: "Các cung đường bạn đã đi & khoảnh khắc", icon: "point.topleft.down.curvedto.point.bottomright.up", color: Color(mapHex: 0x10B981), action: openJourney)
                     }
 
                     VStack(alignment: .leading, spacing: 10) {
@@ -872,10 +679,10 @@ struct MainMenuSheet: View {
                                         Spacer(minLength: 0)
                                     }
                                     .font(.caption.weight(.heavy))
-                                    .foregroundStyle(selectedCategory == category.title ? .white : Color(hex: 0x334155))
+                                    .foregroundStyle(selectedCategory == category.title ? .white : Color(mapHex: 0x334155))
                                     .padding(.horizontal, 10)
                                     .padding(.vertical, 10)
-                                    .background(selectedCategory == category.title ? category.color : Color(hex: 0xF1F5F9), in: Capsule())
+                                    .background(selectedCategory == category.title ? category.color : Color(mapHex: 0xF1F5F9), in: Capsule())
                                 }
                             }
                         }
@@ -936,21 +743,21 @@ private struct MenuActionRow: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
                         .font(.subheadline.weight(.black))
-                        .foregroundStyle(Color(hex: 0x111827))
+                        .foregroundStyle(Color(mapHex: 0x111827))
                     Text(subtitle)
                         .font(.caption.weight(.medium))
-                        .foregroundStyle(Color(hex: 0x6B7280))
+                        .foregroundStyle(Color(mapHex: 0x6B7280))
                         .lineLimit(2)
                 }
 
                 Spacer()
                 Image(systemName: "chevron.right")
                     .font(.caption.weight(.black))
-                    .foregroundStyle(Color(hex: 0x94A3B8))
+                    .foregroundStyle(Color(mapHex: 0x94A3B8))
             }
             .padding(13)
             .background(Color.white, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).stroke(Color(hex: 0xE5E7EB), lineWidth: 1))
+            .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).stroke(Color(mapHex: 0xE5E7EB), lineWidth: 1))
         }
         .buttonStyle(.plain)
     }
@@ -971,7 +778,7 @@ struct AccountSheet: View {
                         icon: authStore.isLoggedIn ? "person.crop.circle.fill" : "lock.fill",
                         title: authStore.isLoggedIn ? "Tài khoản biker" : "Đăng nhập",
                         subtitle: authStore.isLoggedIn ? "Thông tin đồng bộ từ website Maps Biker." : "Đăng nhập tài khoản website để checkin, chia sẻ vị trí trực tiếp và lưu hành trình.",
-                        color: Color(hex: 0xFF5A1F)
+                        color: Color(mapHex: 0xFF5A1F)
                     )
 
                     if authStore.isLoggedIn {
@@ -1013,9 +820,9 @@ struct AccountSheet: View {
                         if let message = authStore.errorMessage {
                             Label(message, systemImage: "exclamationmark.triangle.fill")
                                 .font(.footnote.weight(.semibold))
-                                .foregroundStyle(Color(hex: 0xB91C1C))
+                                .foregroundStyle(Color(mapHex: 0xB91C1C))
                                 .padding(12)
-                                .background(Color(hex: 0xFEE2E2), in: RoundedRectangle(cornerRadius: 14))
+                                .background(Color(mapHex: 0xFEE2E2), in: RoundedRectangle(cornerRadius: 14))
                         }
 
                         Button {
@@ -1039,7 +846,7 @@ struct AccountSheet: View {
                             .padding(14)
                         }
                         .buttonStyle(.borderedProminent)
-                        .tint(Color(hex: 0xFF5A1F))
+                        .tint(Color(mapHex: 0xFF5A1F))
                         .disabled(username.isEmpty || password.isEmpty || authStore.isBusy)
 
                         Text("Đăng ký nhanh vẫn dùng luồng website; app đã chuẩn bị màn đăng nhập để đồng bộ token hiện có.")
@@ -1072,7 +879,7 @@ struct JourneySheet: View {
                         icon: "point.topleft.down.curvedto.point.bottomright.up",
                         title: "Hành trình",
                         subtitle: "Các cung đường bạn đã đi & khoảnh khắc kỉ niệm.",
-                        color: Color(hex: 0x10B981)
+                        color: Color(mapHex: 0x10B981)
                     )
 
                     if let tourURL = URL(string: "https://maps.toctruongbiker.com/tao-video-tour") {
@@ -1082,7 +889,7 @@ struct JourneySheet: View {
                                 .foregroundStyle(.white)
                                 .frame(maxWidth: .infinity)
                                 .padding(14)
-                                .background(Color(hex: 0x111827), in: RoundedRectangle(cornerRadius: 18))
+                                .background(Color(mapHex: 0x111827), in: RoundedRectangle(cornerRadius: 18))
                         }
                     }
 
@@ -1099,7 +906,7 @@ struct JourneySheet: View {
                                         .font(.caption.monospacedDigit().weight(.black))
                                         .foregroundStyle(.white)
                                         .frame(width: 26, height: 26)
-                                        .background(Color(hex: 0x10B981), in: Circle())
+                                        .background(Color(mapHex: 0x10B981), in: Circle())
                                     VStack(alignment: .leading, spacing: 2) {
                                         Text(point.title)
                                             .font(.subheadline.weight(.bold))
@@ -1125,9 +932,9 @@ struct JourneySheet: View {
                             ForEach(syncEngine.checkins) { checkin in
                                 HStack(spacing: 10) {
                                     Image(systemName: "camera.fill")
-                                        .foregroundStyle(Color(hex: 0xF97316))
+                                        .foregroundStyle(Color(mapHex: 0xF97316))
                                         .frame(width: 32, height: 32)
-                                        .background(Color(hex: 0xF97316).opacity(0.12), in: Circle())
+                                        .background(Color(mapHex: 0xF97316).opacity(0.12), in: Circle())
                                     VStack(alignment: .leading, spacing: 2) {
                                         Text(checkin.title)
                                             .font(.subheadline.weight(.bold))
@@ -1253,13 +1060,13 @@ extension Text {
     }
 }
 
-extension Color {
-    init(hex: UInt, alpha: Double = 1) {
+private extension Color {
+    init(mapHex: UInt, alpha: Double = 1) {
         self.init(
             .sRGB,
-            red: Double((hex >> 16) & 0xFF) / 255,
-            green: Double((hex >> 8) & 0xFF) / 255,
-            blue: Double(hex & 0xFF) / 255,
+            red: Double((mapHex >> 16) & 0xFF) / 255,
+            green: Double((mapHex >> 8) & 0xFF) / 255,
+            blue: Double(mapHex & 0xFF) / 255,
             opacity: alpha
         )
     }
