@@ -9,11 +9,8 @@ final class SyncEngine: ObservableObject {
     @Published var errorMessage: String?
     @Published var isSyncing = false
 
-    // 5a. Giữ nguyên authStore
     private var authStore: AuthStore?
     private let api = APIClient()
-    
-    // Đã xoá lastSyncDate theo yêu cầu 5b (Backend không hỗ trợ since)
 
     func configure(authStore: AuthStore) async {
         self.authStore = authStore
@@ -22,20 +19,19 @@ final class SyncEngine: ObservableObject {
         }
     }
 
-    // 5b & 5d. Sửa hàm sync, dùng nonce, xoá since, gọi song song, map hazards
+    // Sửa lỗi gọi hàm API với tham số nonce thay vì token
     func sync() async {
-        // Bỏ token -> dùng authStore?.nonce
         guard let nonce = authStore?.nonce, !nonce.isEmpty else { return }
         isSyncing = true
         errorMessage = nil
         defer { isSyncing = false }
         
         do {
-            // Gọi song song các request để tối ưu hiệu suất mạng
-            async let checkinsTask = api.getCheckins(token: nonce)
-            async let journeyTask = api.getJourney(token: nonce)
-            async let hazardsTask = api.getHazards(token: nonce) // 5d. Lấy hazards từ GET /reports
-            async let pingsTask = api.getPings(token: nonce)     // Tuỳ chọn
+            // SỬA TẠI ĐÂY: Đổi 'token: nonce' thành 'nonce: nonce' khớp với APIClient mới
+            async let checkinsTask = api.getCheckins(nonce: nonce)
+            async let journeyTask = api.getJourney(nonce: nonce)
+            async let hazardsTask = api.getHazards(nonce: nonce)
+            async let pingsTask = api.getPings(nonce: nonce)
             
             // Đợi tất cả hoàn thành
             let (checkinsRaw, journeyRaw, hazardsRaw, _) = try await (checkinsTask, journeyTask, hazardsTask, pingsTask)
@@ -52,16 +48,16 @@ final class SyncEngine: ObservableObject {
         }
     }
 
-    // 5c. Sửa field note thành description, dùng nonce
+    // Sửa lỗi gọi hàm createCheckin
     func createCheckin(title: String, description: String?, coordinate: CLLocationCoordinate2D) async {
-        // Truyền nonce thay token
         guard let nonce = authStore?.nonce, !nonce.isEmpty else { return }
         do {
+            // SỬA TẠI ĐÂY: Đổi tham số đầu tiên từ 'token: nonce' thành 'nonce: nonce'
             let created = try await api.createCheckin(
-                token: nonce,
+                nonce: nonce,
                 request: MHMCreateCheckinRequest(
                     title: title,
-                    description: description, // Dùng description thay vì note
+                    description: description,
                     lat: coordinate.latitude,
                     lng: coordinate.longitude
                 )
@@ -71,8 +67,6 @@ final class SyncEngine: ObservableObject {
             errorMessage = error.localizedDescription
         }
     }
-
-    // Đã xoá hàm merge(_ payload: MHMSyncPayload) vì payload này không còn tồn tại
 
     private func upsertHazard(_ hazard: MHMHazard) {
         hazards.removeAll { $0.id == hazard.id }
