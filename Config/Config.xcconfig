@@ -1,0 +1,6 @@
+// Real config used to build the app.
+// You can override MHM_API_BASE_URL / GOONG_API_KEY via GitHub Secrets in CI.
+// The `/$()/` trick in the URL is required because xcconfig treats `//` as a comment.
+MHM_API_BASE_URL = https:/$()/maps.toctruongbiker.com/wp-json/mhm/v1
+GOONG_API_KEY = Fqlq9CsUmDPkH1gltuyn7GjIDcApP5qKCZCIdQQA
+PRODUCT_BUNDLE_IDENTIFIER = com.mulehazardmap.app

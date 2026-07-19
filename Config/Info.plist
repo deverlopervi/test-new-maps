@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDisplayName</key>
+    <string>Mule Hazard Map</string>
+    <key>CFBundleShortVersionString</key>
+    <string>$(MARKETING_VERSION)</string>
+    <key>CFBundleVersion</key>
+    <string>$(CURRENT_PROJECT_VERSION)</string>
+    <key>UILaunchStoryboardName</key>
+    <string>LaunchScreen</string>
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+    </array>
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
+    <key>MHM_API_BASE_URL</key>
+    <string>$(MHM_API_BASE_URL)</string>
+    <key>GOONG_API_KEY</key>
+    <string>$(GOONG_API_KEY)</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Ứng dụng cần vị trí để hiển thị bạn trên bản đồ và tạo checkin.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Ứng dụng cần camera để chụp ảnh checkin.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Ứng dụng cần thư viện ảnh để chọn ảnh checkin.</string>
+</dict>
+</plist>
