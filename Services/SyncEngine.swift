@@ -19,7 +19,6 @@ final class SyncEngine: ObservableObject {
         }
     }
 
-    // Sửa lỗi gọi hàm API với tham số nonce thay vì token
     func sync() async {
         guard let nonce = authStore?.nonce, !nonce.isEmpty else { return }
         isSyncing = true
@@ -27,20 +26,17 @@ final class SyncEngine: ObservableObject {
         defer { isSyncing = false }
         
         do {
-            // SỬA TẠI ĐÂY: Đổi 'token: nonce' thành 'nonce: nonce' khớp với APIClient mới
+            // Sửa đổi tên tham số từ token: sang nonce:
             async let checkinsTask = api.getCheckins(nonce: nonce)
             async let journeyTask = api.getJourney(nonce: nonce)
-            async let hazardsTask = api.getHazards(nonce: nonce)
-            async let pingsTask = api.getPings(nonce: nonce)
+            async let hazardsTask = api.getHazards(nonce: nonce) 
+            async let pingsTask = api.getPings(nonce: nonce)     
             
-            // Đợi tất cả hoàn thành
             let (checkinsRaw, journeyRaw, hazardsRaw, _) = try await (checkinsTask, journeyTask, hazardsTask, pingsTask)
             
-            // Map kết quả vào state
             checkinsRaw.forEach { upsertCheckin($0) }
             hazardsRaw.forEach { upsertHazard($0) }
             
-            // Lấy array points từ envelope của endpoint /journey
             self.journey = journeyRaw.points
             
         } catch {
@@ -48,16 +44,15 @@ final class SyncEngine: ObservableObject {
         }
     }
 
-    // Sửa lỗi gọi hàm createCheckin
     func createCheckin(title: String, description: String?, coordinate: CLLocationCoordinate2D) async {
         guard let nonce = authStore?.nonce, !nonce.isEmpty else { return }
         do {
-            // SỬA TẠI ĐÂY: Đổi tham số đầu tiên từ 'token: nonce' thành 'nonce: nonce'
+            // Sửa đổi tên tham số từ token: sang nonce:
             let created = try await api.createCheckin(
                 nonce: nonce,
                 request: MHMCreateCheckinRequest(
                     title: title,
-                    description: description,
+                    description: description, 
                     lat: coordinate.latitude,
                     lng: coordinate.longitude
                 )
