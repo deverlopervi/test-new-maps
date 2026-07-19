@@ -119,7 +119,7 @@ struct MapScreen: View {
                 locationManager.request()
                 await syncEngine.sync()
             }
-            .onChange(of: locationManager.coordinate?.latitude) { _ in
+            .onChange(of: locationManager.coordinate?.latitude) { oldValue, newValue in
                 if let coordinate = locationManager.coordinate {
                     centerCoordinate = coordinate
                 }
@@ -1131,7 +1131,6 @@ struct JourneySheet: View {
                                     VStack(alignment: .leading, spacing: 2) {
                                         Text(checkin.title)
                                             .font(.subheadline.weight(.bold))
-                                        // Đổi từ checkin.note thành checkin.description để lấy dữ liệu từ trường mới[cite: 5]
                                         Text(checkin.description ?? "Không có ghi chú")
                                             .font(.caption)
                                             .foregroundStyle(.secondary)
