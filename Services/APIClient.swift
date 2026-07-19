@@ -17,24 +17,9 @@ enum APIError: LocalizedError {
 }
 
 // MARK: - API Response Models
+// Ghi chú: MHMLoginResponse đã được chuyển ra file MHMModels.swift để dùng chung toàn hệ thống.
 
-struct MHMLoginResponse: Codable {
-    let id: Int
-    let displayName: String
-    let email: String
-    let avatar: String?
-    let nonce: String
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case displayName = "display_name"
-        case email
-        case avatar
-        case nonce
-    }
-}
-
-// Định nghĩa bổ sung các model phục vụ cho việc bóc tách hàm sync cũ
+// Định nghĩa bổ sung các model phục vụ cho việc bóc tách hàm sync cũ[cite: 13]
 struct MeResponse: Codable {
     let id: Int
     let displayName: String
@@ -83,7 +68,7 @@ struct PingResponse: Codable {
     let ttl: Int
 }
 
-// MARK: - API Client Implementation
+// MARK: - API Client Implementation[cite: 13]
 
 final class APIClient {
     private let baseURL: URL
@@ -94,7 +79,7 @@ final class APIClient {
     init(baseURL: URL = AppConfig.apiBaseURL) {
         self.baseURL = baseURL
         
-        // URLSession cấu hình giữ cookie tự động qua HTTPCookieStorage.shared phục vụ WordPress Session Cookie Auth
+        // URLSession cấu hình giữ cookie tự động qua HTTPCookieStorage.shared phục vụ WordPress Session Cookie Auth[cite: 13]
         let configuration = URLSessionConfiguration.default
         configuration.httpCookieStorage = HTTPCookieStorage.shared
         configuration.httpShouldSetCookies = true
@@ -116,19 +101,19 @@ final class APIClient {
         encoder.dateEncodingStrategy = .iso8601
     }
 
-    // 2a. Hàm đăng nhập trỏ về auth/login và sửa body key thành "login"
+    // 2a. Hàm đăng nhập trỏ về auth/login và sửa body key thành "login"[cite: 13]
     func login(username: String, password: String) async throws -> MHMLoginResponse {
         let body = ["login": username, "password": password]
         return try await send(path: "auth/login", method: "POST", nonce: nil, body: body)
     }
 
-    // 2b. Thay thế hàm mobile/sync bằng các hàm lấy dữ liệu đơn lẻ từ backend độc lập
+    // 2b. Thay thế hàm mobile/sync bằng các hàm lấy dữ liệu đơn lẻ từ backend độc lập[cite: 13]
     func getMe(nonce: String) async throws -> MeResponse {
         return try await send(path: "me", method: "GET", nonce: nonce, body: Optional<String>.none)
     }
 
     func getCheckins(nonce: String) async throws -> [MHMCheckin] {
-        // Trả về mảng phẳng trực tiếp từ endpoint /checkins
+        // Trả về mảng phẳng trực tiếp từ endpoint /checkins[cite: 13]
         return try await send(path: "checkins", method: "GET", nonce: nonce, body: Optional<String>.none)
     }
 
@@ -141,20 +126,20 @@ final class APIClient {
     }
     
     func getHazards(nonce: String?) async throws -> [MHMHazard] {
-        // Ánh xạ hazard từ endpoint /reports của backend WordPress
+        // Ánh xạ hazard từ endpoint /reports của backend WordPress[cite: 13]
         return try await send(path: "reports", method: "GET", nonce: nonce, body: Optional<String>.none)
     }
 
-    // 2d. Hàm tạo checkin giữ nguyên path /checkins, sử dụng struct request mới đồng bộ field 'description' thay cho 'note'
+    // 2d. Hàm tạo checkin giữ nguyên path /checkins, sử dụng struct request mới đồng bộ field 'description' thay cho 'note'[cite: 13]
     func createCheckin(nonce: String, request: MHMCreateCheckinRequest) async throws -> MHMCheckin {
         return try await send(path: "checkins", method: "POST", nonce: nonce, body: request)
     }
 
-    // 2c. Hàm send đa hình: Thay thế hoàn toàn Bearer Token bằng X-WP-Nonce Header
+    // 2c. Hàm send đa hình: Thay thế hoàn toàn Bearer Token bằng X-WP-Nonce Header[cite: 13]
     private func send<Response: Decodable, Body: Encodable>(
         path: String,
         method: String,
-        nonce: String?, // Đổi tên tham số từ token sang nonce đúng ngữ nghĩa dữ liệu
+        nonce: String?, // Đổi tên tham số từ token sang nonce đúng ngữ nghĩa dữ liệu[cite: 13]
         query: [URLQueryItem] = [],
         body: Body?
     ) async throws -> Response {
@@ -169,7 +154,7 @@ final class APIClient {
         request.httpMethod = method
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         
-        // Thêm header xác thực nonce của WordPress (Loại bỏ Authorization: Bearer hoàn toàn)
+        // Thêm header xác thực nonce của WordPress (Loại bỏ Authorization: Bearer hoàn toàn)[cite: 13]
         if let nonce, !nonce.isEmpty {
             request.setValue(nonce, forHTTPHeaderField: "X-WP-Nonce")
         }
