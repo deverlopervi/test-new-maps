@@ -123,3 +123,22 @@ struct MHMCreateCheckinRequest: Codable {
     let lat: Double
     let lng: Double
 }
+// MARK: - MHMPing (Bổ sung để sửa lỗi APIClient)
+struct MHMPing: Codable, Identifiable, Equatable {
+    let id: Int
+    let title: String
+    let coordinate: MHMCoordinate
+    let updatedAt: Date?
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case coordinate
+        case updatedAt = "updated_at"
+    }
+}
+
+// MARK: - PingResponse (Nếu APIClient của ông dùng struct này làm cục wrap data trả về)
+struct PingResponse: Codable {
+    let pings: [MHMPing]
+}
