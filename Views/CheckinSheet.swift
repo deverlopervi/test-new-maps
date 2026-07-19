@@ -73,7 +73,7 @@ struct CheckinSheet: View {
                             // Refactor: Đổi parameter truyền vào từ 'note' thành 'description' để khớp với API Request mới
                             await syncEngine.createCheckin(
                                 title: title.isEmpty ? mood : title,
-                                description: note.isEmpty ? nil : "[\(mood)] \(note)",
+                                description: note.isEmpty ? nil : "[\(mood)] \(note)", // Đã là description
                                 coordinate: coordinate
                             )
                             dismiss()
