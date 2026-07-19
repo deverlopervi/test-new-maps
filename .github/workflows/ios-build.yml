@@ -1,0 +1,90 @@
+name: Build iOS App
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build (Simulator, unsigned)
+    runs-on: macos-15
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: Show Xcode & Swift version
+        run: |
+          xcodebuild -version
+          swift --version
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Inject secrets into Config.xcconfig
+        env:
+          MHM_API_BASE_URL: ${{ secrets.MHM_API_BASE_URL }}
+          GOONG_API_KEY: ${{ secrets.GOONG_API_KEY }}
+        run: |
+          if [ -n "$MHM_API_BASE_URL" ]; then
+            # xcconfig requires the "/$()/" trick because // starts a comment.
+            ESCAPED_URL=$(printf '%s' "$MHM_API_BASE_URL" | sed 's#//#/$()/#')
+            sed -i.bak "s|^MHM_API_BASE_URL = .*|MHM_API_BASE_URL = $ESCAPED_URL|" Config/Config.xcconfig
+          fi
+          if [ -n "$GOONG_API_KEY" ]; then
+            sed -i.bak "s|^GOONG_API_KEY = .*|GOONG_API_KEY = $GOONG_API_KEY|" Config/Config.xcconfig
+          fi
+          rm -f Config/Config.xcconfig.bak
+          echo "--- Config.xcconfig (values masked) ---"
+          sed 's|=.*|= ***|' Config/Config.xcconfig
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build for iOS Simulator (unsigned)
+        run: |
+          set -eo pipefail
+          xcodebuild \
+            -project MuleHazardMap.xcodeproj \
+            -scheme MuleHazardMap \
+            -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Verify .app bundle integrity
+        run: |
+          APP=$(find build -name "MuleHazardMap.app" -maxdepth 8 -print -quit)
+          echo "APP=$APP"
+          test -n "$APP" || { echo "No .app produced"; exit 1; }
+          echo "--- Contents ---"
+          ls -la "$APP"
+          test -f "$APP/Info.plist"                || { echo "Missing Info.plist"; exit 1; }
+          test -f "$APP/MuleHazardMap"             || { echo "Missing binary"; exit 1; }
+          test -f "$APP/LaunchScreen.storyboardc"  || echo "WARN: no LaunchScreen.storyboardc"
+          test -f "$APP/Assets.car"                || echo "WARN: no Assets.car"
+
+      - name: Package .app artifact
+        run: |
+          APP_PATH=$(find build -name "MuleHazardMap.app" -maxdepth 6 -print -quit)
+          echo "Found app at: $APP_PATH"
+          mkdir -p artifacts
+          cp -R "$APP_PATH" artifacts/
+          cd artifacts && zip -r MuleHazardMap-simulator.zip MuleHazardMap.app
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MuleHazardMap-simulator
+          path: artifacts/MuleHazardMap-simulator.zip
+          retention-days: 14
