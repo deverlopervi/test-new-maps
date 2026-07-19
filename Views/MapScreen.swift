@@ -72,7 +72,7 @@ struct MapScreen: View {
         return syncEngine.hazards.filter(category.matches)
     }
 
-    var body: View {
+    var body: some View {
         NavigationStack {
             ZStack {
                 MHMMapView(
